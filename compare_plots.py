@@ -11,15 +11,7 @@ def main():
 
     data_directory = collections.OrderedDict()
 
-    #data_directory['ILES_ENO'] = data_paths + 'ILES_ENO/Stats.Bomex.nc'
-    #data_directory['LES_ENO'] = data_paths + 'TLES_ENO/Stats.Bomex.nc'
-
     data_directory['0.40x'] = data_paths + 'Stats.GCMVarying.nc'
-    #data_directory['Uniform'] = data_paths + '/Output.Bomex.iform/stats/Stats.Bomex.nc'
-    #data_directory['5th'] = data_paths + '5th/Stats.Bomex.nc'
-    #data_directory['3rdb'] = data_paths + '3rdb/Stats.Bomex.nc'
-    #data_directory['5thb'] = data_paths + '5thb/Stats.Bomex.nc'
-    #data_directory['5thlo'] = data_paths + '5thlo/Stats.Bomex.nc'
 
     parameters = {}
     parameters['t_min'] = 0.0
@@ -65,8 +57,6 @@ def plot_ref_profiles(data_directory, parameters):
             plt.legend()
             plt.savefig(out_path + var_name + '_ref.pdf')
             plt.close()
-
-
 
     return
 
