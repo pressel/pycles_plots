@@ -64,6 +64,7 @@ def plot_ref_profiles(data_directory, parameters):
 def plot_timeseries(data_directory, parameters):
 
 
+
     list_of_variables = []
     for key in data_directory.keys():
 
@@ -80,24 +81,26 @@ def plot_timeseries(data_directory, parameters):
 
     #now make plots
     for var_name in list_of_variables:
-        print var_name
-        plt.figure(1)
-        for key in data_directory.keys():
-            rt_grp = nc.Dataset(data_directory[key], 'r')
-            ts_grp = rt_grp['timeseries']
+        try:
+            plt.figure(1)
+            for key in data_directory.keys():
+                rt_grp = nc.Dataset(data_directory[key], 'r')
+                ts_grp = rt_grp['timeseries']
 
-            if var_name == 's_int':
-                plt.plot(ts_grp['t'][:]/3600.0,  ts_grp[var_name][:]/ts_grp[var_name][0], label=key)
-            else:
-                plt.plot(ts_grp['t'][:] / 3600.0, ts_grp[var_name][:], label=key)
+                if var_name == 's_int':
+                    plt.plot(ts_grp['t'][:]/3600.0,  ts_grp[var_name][:]/ts_grp[var_name][0], label=key)
+                else:
+                    plt.plot(ts_grp['t'][:] / 3600.0, ts_grp[var_name][:], label=key)
 
-            rt_grp.close()
+                rt_grp.close()
 
-        plt.grid()
-        plt.legend()
-        plt.title(var_name)
-        plt.savefig(out_path + var_name + '_ts.pdf')
-        plt.close()
+            plt.grid()
+            plt.legend()
+            plt.title(var_name)
+            plt.savefig(out_path + var_name + '_ts.pdf')
+            plt.close()
+        except:
+            pass
 
 
 def plot_profiles(data_directory, parameters):
@@ -118,31 +121,31 @@ def plot_profiles(data_directory, parameters):
 
     #now make plots
     for var_name in list_of_variables:
-        print var_name
-        if var_name == 't' or var_name == 'z_half' or var_name == 'z':
-                pass
-        else:
-            plt.figure(1)
-            for key in data_directory.keys():
-                rt_grp = nc.Dataset(data_directory[key], 'r')
-                ps_grp = rt_grp['profiles']
-                t = ps_grp['t'][:]
-                t_max_indx = np.where(np.abs(t - parameters['t_max']) == np.min(np.abs(t - parameters['t_max'])))[0]
-                t_min_indx = np.where(np.abs(t - parameters['t_min']) == np.min(np.abs(t - parameters['t_min'])))[0]
+        try:
+            print var_name
+            if var_name == 't' or var_name == 'z_half' or var_name == 'z':
+                    pass
+            else:
+                plt.figure(1)
+                for key in data_directory.keys():
+                    rt_grp = nc.Dataset(data_directory[key], 'r')
+                    ps_grp = rt_grp['profiles']
+                    ref_grp = rt_grp['reference']
+                    t = ps_grp['t'][:]
+                    t_max_indx = np.where(np.abs(t - parameters['t_max']) == np.min(np.abs(t - parameters['t_max'])))[0]
+                    t_min_indx = np.where(np.abs(t - parameters['t_min']) == np.min(np.abs(t - parameters['t_min'])))[0]
 
-                print t_min_indx, t_max_indx
-
-                print np.shape(ps_grp[var_name][t_min_indx:t_max_indx,:])
-
-                plt.plot(np.mean(ps_grp[var_name][t_min_indx:t_max_indx,:],axis=0), ps_grp['z'][:], label=key)
+                    plt.plot(np.mean(ps_grp[var_name][t_min_indx:t_max_indx,:],axis=0), ps_grp['zp_half'][:], label=key)
+                    plt.plot(ps_grp[var_name][1, :], ref_grp['zp_half'][:], label=key)
 
 
-                rt_grp.close()
-            plt.title(var_name)
-            plt.legend()
-            plt.savefig(out_path + var_name + '_ps.pdf')
-            plt.close()
-
+                    rt_grp.close()
+                plt.title(var_name)
+                plt.legend()
+                plt.savefig(out_path + var_name + '_ps.pdf')
+                plt.close()
+        except:
+            pass
     return
 
 
